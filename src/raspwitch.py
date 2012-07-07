@@ -24,15 +24,13 @@ def int_to_bit_list(i, bit_count):
         shifted = shifted >> 1
     return result
 
-# encodes 0 as a 1 count state change, 1 as a 3 count state change
+# encodes 0 as a 1 count state change, 1 as a 3 count state change, starting
+# with a change to low
 def encode_as_state_list(bit_list):
     result = []
-    state = 1
+    state = 0
     for bit in bit_list:
-        result.append(state)
-        if bit == 1:
-            result.append(state)
-            result.append(state)
+        result.extend([state] if bit == 0 else [state, state, state])
         state = 1 - state
     return result
 
@@ -52,3 +50,8 @@ def send(pin, state_list, pulse_width, my_time = time):
 def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
     send(pin, encode_packet(command_as_bit_list(channel, button, on)), pulse_width)
 
+if __name__ == "__main__":
+    from quick2wire.gpio import Pin, exported
+    with exported(Pin(3, Pin.Out)) as out_pin:
+        for i in range(1, 6):
+            send_command(out_pin, 1, 1, True)
