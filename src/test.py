@@ -42,9 +42,9 @@ class Test(unittest.TestCase):
         send(capturingPin, [0, 1, 1, 1, 0], 0)
 
     def test_busy_wait_until(self):
-        end_time = time() + 500 * 10e-6
+        end_time = time() + 500 * 1e-6
         times = instrumented_busy_wait_until(end_time)
-        self.assertTrue(time() - end_time < 10 * 10e-6)
+        self.assertTrue(time() - end_time < 50 * 1e-6)
         self.assertTrue(len(times) > 10)
         print(times)
 
