@@ -1,5 +1,6 @@
 import unittest
 from raspwitch import *
+from time import time
 
 class Test(unittest.TestCase):
 
@@ -31,12 +32,18 @@ class Test(unittest.TestCase):
 
     def test_send(self):
         capturingPin = lambda: None # get around to this
-        send(capturingPin, [0, 1, 1, 1, 0], 0.005)
+        send(capturingPin, [0, 1, 1, 1, 0], 0)
 
-    def func_test(self):
-        from quick2wire.gpio import Pin, exported
-        with exported(Pin(3, Pin.Out)) as out_pin:
-            send_command(out_pin, 1, 1, True)
+    def test_busy_wait(self):
+        duration = 50 * 10e-6
+        count = 0
+        start = time()
+        end = start + duration
+        while (time() <= end):
+            count = count + 1
+        self.assertTrue(count > 1)
+        self.assertTrue(time() - end < 10 * 10e-6)
+        print(count)
 
 
 if __name__ == "__main__":

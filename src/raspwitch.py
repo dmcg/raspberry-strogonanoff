@@ -42,10 +42,15 @@ def command_as_bit_list(channel, button, on):
         channel_codes[channel - 1][button - 1], 32) + \
         int_to_bit_list(on_code if on else off_code, 16)
 
+def busy_wait_until(end_time, my_time = time):
+    while (my_time.time() < end_time): pass
+
 def send(pin, state_list, pulse_width, my_time = time):
+    end_time = my_time.time() + pulse_width
     for state in state_list:
         pin.value = state
-        my_time.sleep(pulse_width)
+        busy_wait_until(end_time, my_time)
+        end_time = end_time + pulse_width
 
 def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
     send(pin, encode_packet(command_as_bit_list(channel, button, on)), pulse_width)
