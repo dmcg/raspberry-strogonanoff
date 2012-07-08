@@ -42,10 +42,7 @@ def command_as_bit_list(channel, button, on):
         int_to_bit_list(on_code if on else off_code, 16)
 
 def busy_wait_until(end_time):
-    count = 0
-    while (time.time() <= end_time):
-        count = count + 1
-    return count
+    while (time.time() <= end_time): pass
 
 def send(pin, state_list, pulse_width):
     end_time = time.time() + pulse_width
