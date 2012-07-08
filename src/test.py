@@ -2,6 +2,14 @@ import unittest
 from raspwitch import *
 from time import time
 
+def instrumented_busy_wait_until(end_time):
+    result = []
+    while (True):
+        t = time()
+        result.append(t)
+        if t >= end_time:
+            return result
+
 class Test(unittest.TestCase):
 
     def test_int_to_bit_list(self):
@@ -19,10 +27,9 @@ class Test(unittest.TestCase):
 
     def test_encode_packet(self):
         preamble = [0] * 26
-        postamble = [0] * 5
 
-        self.assertEquals(preamble + [1] + postamble, encode_packet([]))
-        self.assertEquals(preamble + [1] + [0, 1, 1, 1] + postamble, encode_packet([0, 1]))
+        self.assertEquals(preamble + [1], encode_packet([]))
+        self.assertEquals(preamble + [1] + [0, 1, 1, 1], encode_packet([0, 1]))
 
     def test_command_as_bit_list(self):
         self.assertEquals(int_to_bit_list(channel_codes[0][0], 32) + int_to_bit_list(on_code, 16),
@@ -36,7 +43,7 @@ class Test(unittest.TestCase):
 
     def test_busy_wait_until(self):
         end_time = time() + 500 * 10e-6
-        times = busy_wait_until(end_time)
+        times = instrumented_busy_wait_until(end_time)
         self.assertTrue(time() - end_time < 10 * 10e-6)
         self.assertTrue(len(times) > 10)
         print(times)

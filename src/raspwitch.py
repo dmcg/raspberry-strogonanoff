@@ -1,7 +1,6 @@
 import time
 
 preamble = [0] * 26
-postamble = [0] * 5
 
 channel_codes = [
     [859124533, 861090613, 892547893, 1395864373],
@@ -35,26 +34,24 @@ def encode_as_state_list(bit_list):
     return result
 
 def encode_packet(bit_list):
-    return preamble + [1] + encode_as_state_list(bit_list) + postamble
+    return preamble + [1] + encode_as_state_list(bit_list)
 
 def command_as_bit_list(channel, button, on):
     return int_to_bit_list(
         channel_codes[channel - 1][button - 1], 32) + \
         int_to_bit_list(on_code if on else off_code, 16)
 
-def busy_wait_until(end_time, my_time = time):
-    result = []
-    while (True):
-        t = my_time.time()
-        result.append(t)
-        if t >= end_time:
-            return result
+def busy_wait_until(end_time):
+    count = 0
+    while (time.time() <= end_time):
+        count = count + 1
+    return count
 
-def send(pin, state_list, pulse_width, my_time = time):
-    end_time = my_time.time() + pulse_width
+def send(pin, state_list, pulse_width):
+    end_time = time.time() + pulse_width
     for state in state_list:
         pin.value = state
-        busy_wait_until(end_time, my_time)
+        busy_wait_until(end_time)
         end_time = end_time + pulse_width
 
 def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
