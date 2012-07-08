@@ -34,17 +34,12 @@ class Test(unittest.TestCase):
         capturingPin = lambda: None # get around to this
         send(capturingPin, [0, 1, 1, 1, 0], 0)
 
-    def test_busy_wait(self):
-        duration = 50 * 10e-6
-        count = 0
-        start = time()
-        end = start + duration
-        while (time() <= end):
-            count = count + 1
-        self.assertTrue(count > 1)
-        self.assertTrue(time() - end < 10 * 10e-6)
-        print(count)
-
+    def test_busy_wait_until(self):
+        end_time = time() + 500 * 10e-6
+        times = busy_wait_until(end_time)
+        self.assertTrue(time() - end_time < 10 * 10e-6)
+        self.assertTrue(len(times) > 10)
+        print(times)
 
 if __name__ == "__main__":
     unittest.main()

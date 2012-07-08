@@ -13,7 +13,7 @@ channel_codes = [
 on_code = 13107
 off_code = 21299
 
-default_pulse_width =500 * 1e-6
+default_pulse_width = 500 * 1e-6
 
 # converts the lowest bit_count bits to a list of ints
 def int_to_bit_list(i, bit_count):
@@ -43,7 +43,12 @@ def command_as_bit_list(channel, button, on):
         int_to_bit_list(on_code if on else off_code, 16)
 
 def busy_wait_until(end_time, my_time = time):
-    while (my_time.time() < end_time): pass
+    result = []
+    while (True):
+        t = my_time.time()
+        result.append(t)
+        if t >= end_time:
+            return result
 
 def send(pin, state_list, pulse_width, my_time = time):
     end_time = my_time.time() + pulse_width
