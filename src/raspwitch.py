@@ -1,4 +1,5 @@
 import time
+import wiringpi
 
 preamble = [0] * 26
 
@@ -42,23 +43,20 @@ def command_as_bit_list(channel, button, on):
         int_to_bit_list(on_code if on else off_code, 16)
 
 def busy_wait_until(end_time):
-    count = 0
-    while (time.time() <= end_time):
-        count = count + 1
-    return count
+    while (time.time() <= end_time): pass
 
 def send(pin, state_list, pulse_width):
-    end_time = time.time() + pulse_width
+    end_time = time.time()
     for state in state_list:
-        pin.value = state
-        busy_wait_until(end_time)
         end_time = end_time + pulse_width
+        wiringpi.digitalWrite(8, state)
+        busy_wait_until(end_time)
 
 def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
     send(pin, encode_packet(command_as_bit_list(channel, button, on)), pulse_width)
 
 if __name__ == "__main__":
-    from quick2wire.gpio import Pin, exported
-    with exported(Pin(3, Pin.Out)) as out_pin:
-        for i in range(1, 6):
-            send_command(out_pin, 1, 1, True)
+    wiringpi.wiringPiSetup()
+    wiringpi.pinMode(8, 1)
+    for i in range(1, 6):
+        send_command(8, 1, 1, True)
