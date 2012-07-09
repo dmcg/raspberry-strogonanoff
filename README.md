@@ -14,4 +14,5 @@ using the awesome reverse engineering detailed here
 http://www.fanjita.org/serendipity/archives/53-Interfacing-with-radio-controlled-mains-sockets-part-2.html
 
 
-Needs to be run as root - sudo python raspwitch.py
+Needs to be run as root - 
+sudo python raspwitch.py --channel 1 --button 3 on 
