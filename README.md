@@ -1,4 +1,17 @@
-raspwitch
+Raspberry Strogonanoff
 =========
 
-Raspberry Pi Remote Mains Switcher
+A Raspberry Pi Remote Mains Switcher, to switch these
+
+http://www.maplin.co.uk/remote-controlled-mains-sockets-5-pack-348217
+
+with one of these
+
+http://proto-pic.co.uk/434mhz-rf-link-transmitter/
+
+using the awesome reverse engineering detailed here
+
+http://www.fanjita.org/serendipity/archives/53-Interfacing-with-radio-controlled-mains-sockets-part-2.html
+
+
+Needs to be run as root - sudo python raspwitch.py
