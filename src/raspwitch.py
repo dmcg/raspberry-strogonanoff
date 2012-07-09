@@ -1,6 +1,8 @@
 import time
 import wiringpi
 
+from optparse import OptionParser
+
 preamble = [0] * 26
 
 channel_codes = [
@@ -56,7 +58,12 @@ def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
     send(pin, encode_packet(command_as_bit_list(channel, button, on)), pulse_width)
 
 if __name__ == "__main__":
+    parser = OptionParser()
+    parser.add_option("-b", "--button", type = "int", default = 1)
+    parser.add_option("-c", "--channel", type = "int", default = 1)
+    (options, args) = parser.parse_args()
+    on = True if len(args) == 0 or args[0] != "off" else False
     wiringpi.wiringPiSetup()
     wiringpi.pinMode(8, 1)
     for i in range(1, 6):
-        send_command(8, 1, 1, True)
+        send_command(8, options.channel, options.button, on)
