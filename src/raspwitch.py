@@ -51,7 +51,7 @@ def send(pin, state_list, pulse_width):
     end_time = time.time()
     for state in state_list:
         end_time = end_time + pulse_width
-        wiringpi.digitalWrite(8, state)
+        wiringpi.digitalWrite(pin, state)
         busy_wait_until(end_time)
 
 def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
@@ -61,9 +61,10 @@ if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option("-b", "--button", type = "int", default = 1)
     parser.add_option("-c", "--channel", type = "int", default = 1)
+    parser.add_option("-g", "--gpio", type = "int", default = 0)
     (options, args) = parser.parse_args()
     on = True if len(args) == 0 or args[0] != "off" else False
     wiringpi.wiringPiSetup()
     wiringpi.pinMode(8, 1)
     for i in range(1, 6):
-        send_command(8, options.channel, options.button, on)
+        send_command(options.gpio, options.channel, options.button, on)
