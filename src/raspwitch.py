@@ -68,6 +68,6 @@ if __name__ == "__main__":
     (options, args) = parser.parse_args()
     on = True if len(args) == 0 or args[0] != "off" else False
     wiringpi.wiringPiSetup()
-    wiringpi.pinMode(8, 1)
+    wiringpi.pinMode(options.gpio, 1)
     for i in range(1, 6):
         send_command(options.gpio, options.channel, options.button, on)
