@@ -15,4 +15,4 @@ http://www.fanjita.org/serendipity/archives/53-Interfacing-with-radio-controlled
 
 
 Needs to be run as root - 
-sudo python raspwitch.py --channel 1 --button 3 on 
+sudo python raspwitch.py --channel 1 --button 3 --gpio 8 on 
