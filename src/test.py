@@ -27,9 +27,10 @@ class Test(unittest.TestCase):
 
     def test_encode_packet(self):
         preamble = [0] * 26
+        postamble = [0, 0]
 
-        self.assertEquals(preamble + [1], encode_packet([]))
-        self.assertEquals(preamble + [1] + [0, 1, 1, 1], encode_packet([0, 1]))
+        self.assertEquals(preamble + [1] + postamble, encode_packet([]))
+        self.assertEquals(preamble + [1] + [0, 1, 1, 1] + postamble, encode_packet([0, 1]))
 
     def test_command_as_bit_list(self):
         self.assertEquals(int_to_bit_list(channel_codes[0][0], 32) + int_to_bit_list(on_code, 16),
@@ -37,16 +38,11 @@ class Test(unittest.TestCase):
         self.assertEquals(int_to_bit_list(channel_codes[1][2], 32) + int_to_bit_list(off_code, 16),
             command_as_bit_list(2, 3, False))
 
-    def test_send(self):
-        capturingPin = lambda: None # get around to this
-        send(capturingPin, [0, 1, 1, 1, 0], 0)
-
     def test_busy_wait_until(self):
         end_time = time() + 500 * 1e-6
         times = instrumented_busy_wait_until(end_time)
         self.assertTrue(time() - end_time < 50 * 1e-6)
         self.assertTrue(len(times) > 10)
-        print(times)
 
 if __name__ == "__main__":
     unittest.main()

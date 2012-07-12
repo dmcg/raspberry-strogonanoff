@@ -38,7 +38,7 @@ def encode_as_state_list(bit_list):
     return result
 
 def encode_packet(bit_list):
-    return preamble + [1] + encode_as_state_list(bit_list)
+    return preamble + sync + encode_as_state_list(bit_list) + postamble
 
 def command_as_bit_list(channel, button, on):
     return int_to_bit_list(
@@ -60,6 +60,7 @@ def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
 
 if __name__ == "__main__":
     import wiringpi
+
     parser = OptionParser()
     parser.add_option("-b", "--button", type = "int", default = 1)
     parser.add_option("-c", "--channel", type = "int", default = 1)
