@@ -1,9 +1,10 @@
 import time
-import wiringpi
 
 from optparse import OptionParser
 
 preamble = [0] * 26
+sync = [1]
+postamble = [0] * 2
 
 channel_codes = [
     [859124533, 861090613, 892547893, 1395864373],
@@ -58,6 +59,7 @@ def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
     send(pin, encode_packet(command_as_bit_list(channel, button, on)), pulse_width)
 
 if __name__ == "__main__":
+    import wiringpi
     parser = OptionParser()
     parser.add_option("-b", "--button", type = "int", default = 1)
     parser.add_option("-c", "--channel", type = "int", default = 1)
