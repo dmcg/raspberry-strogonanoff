@@ -48,18 +48,29 @@ def command_as_bit_list(channel, button, on):
 def busy_wait_until(end_time):
     while (time.time() <= end_time): pass
 
-def send(pin, state_list, pulse_width):
-    end_time = time.time()
-    for state in state_list:
-        end_time = end_time + pulse_width
-        wiringpi.digitalWrite(pin, state)
-        busy_wait_until(end_time)
+def send(pin_number, state_list, pulse_width):
+     end_time = time.time()
+     for state in state_list:
+         end_time = end_time + pulse_width
+         pin.set_value(state)
+         busy_wait_until(end_time)
+
+# still not fast enough
+def quick2wire_send(pin_number, state_list, pulse_width):
+    with exported(Pin(pin_number, Pin.Out)) as pin:
+        end_time = time.time()
+        for state in state_list:
+            end_time = end_time + pulse_width
+            pin.value = state
+            busy_wait_until(end_time)
+
 
 def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
     send(pin, encode_packet(command_as_bit_list(channel, button, on)), pulse_width)
 
+from WiringPin import WiringPin
+
 if __name__ == "__main__":
-    import wiringpi
 
     parser = OptionParser()
     parser.add_option("-b", "--button", type = "int", default = 1)
@@ -67,7 +78,6 @@ if __name__ == "__main__":
     parser.add_option("-g", "--gpio", type = "int", default = 0)
     (options, args) = parser.parse_args()
     on = True if len(args) == 0 or args[0] != "off" else False
-    wiringpi.wiringPiSetup()
-    wiringpi.pinMode(options.gpio, 1)
+    pin = WiringPin(options.gpio).export()
     for i in range(1, 6):
-        send_command(options.gpio, options.channel, options.button, on)
+        send_command(pin, options.channel, options.button, on)
