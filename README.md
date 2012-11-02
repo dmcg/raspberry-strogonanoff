@@ -21,6 +21,7 @@ Requires WiringPi-Python
     git clone https://github.com/WiringPi/WiringPi-Python.git
     cd WiringPi-Python/
     git submodule update --init
+    sudo apt-get install python2.7-dev
     sudo apt-get install python-setuptools
     sudo python setup.py install
 
