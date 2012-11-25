@@ -1,7 +1,5 @@
 import time
 
-from optparse import OptionParser
-
 preamble = [0] * 26
 sync = [1]
 postamble = [0] * 2
@@ -68,9 +66,11 @@ def quick2wire_send(pin_number, state_list, pulse_width):
 def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
     send(pin, encode_packet(command_as_bit_list(channel, button, on)), pulse_width)
 
-from WiringPin import WiringPin
-
 if __name__ == "__main__":
+
+    from WiringPin import WiringPin
+    from optparse import OptionParser
+
 
     parser = OptionParser()
     parser.add_option("-b", "--button", type = "int", default = 1)

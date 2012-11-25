@@ -8,7 +8,7 @@ class WiringPin:
         self.gpio_number = gpio_number
 
     def export(self):
-        wiringpi.pinMode(self.gpio_number, 1)
+        wiringpi.pinMode(self.gpio_number, wiringpi.OUTPUT)
         return self
 
     def set_value(self, value):

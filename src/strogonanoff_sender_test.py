@@ -1,5 +1,5 @@
 import unittest
-from raspwitch import *
+from strogonanoff_sender import *
 from time import time
 
 def instrumented_busy_wait_until(end_time):
@@ -10,7 +10,7 @@ def instrumented_busy_wait_until(end_time):
         if t >= end_time:
             return result
 
-class Test(unittest.TestCase):
+class Strogonanoff_SenderTest(unittest.TestCase):
 
     def test_int_to_bit_list(self):
         self.assertEqual([0], int_to_bit_list(0, 1))
@@ -39,9 +39,9 @@ class Test(unittest.TestCase):
             command_as_bit_list(2, 3, False))
 
     def test_busy_wait_until(self):
-        end_time = time() + 500 * 1e-6
+        end_time = time() + default_pulse_width
         times = instrumented_busy_wait_until(end_time)
-        self.assertTrue(time() - end_time < 50 * 1e-6)
+        self.assertTrue(time() - end_time < default_pulse_width / 10)
         self.assertTrue(len(times) > 10)
 
 if __name__ == "__main__":
