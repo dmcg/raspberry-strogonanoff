@@ -1,20 +1,9 @@
-import time
-
+from time import time
+from strogonanoff_common import *
 preamble = [0] * 26
 sync = [1]
 postamble = [0] * 2
 
-channel_codes = [
-    [859124533, 861090613, 892547893, 1395864373],
-    [859124563, 861090643, 892547923, 1395864403],
-    [859125043, 861091123, 892548403, 1395864883],
-    [859132723, 861098803, 892556083, 1395872563]
-]
-
-on_code = 13107
-off_code = 21299
-
-default_pulse_width = 500 * 1e-6
 
 # converts the lowest bit_count bits to a list of ints
 def int_to_bit_list(i, bit_count):
@@ -44,10 +33,10 @@ def command_as_bit_list(channel, button, on):
         int_to_bit_list(on_code if on else off_code, 16)
 
 def busy_wait_until(end_time):
-    while (time.time() <= end_time): pass
+    while (time() <= end_time): pass
 
 def send(pin_number, state_list, pulse_width):
-     end_time = time.time()
+     end_time = time()
      for state in state_list:
          end_time = end_time + pulse_width
          pin.set_value(state)
@@ -56,7 +45,7 @@ def send(pin_number, state_list, pulse_width):
 # still not fast enough
 def quick2wire_send(pin_number, state_list, pulse_width):
     with exported(Pin(pin_number, Pin.Out)) as pin:
-        end_time = time.time()
+        end_time = time()
         for state in state_list:
             end_time = end_time + pulse_width
             pin.value = state

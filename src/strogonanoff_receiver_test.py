@@ -1,7 +1,6 @@
-import unittest
-#from strogonanoff_receiver import *
 from time import time
-import sys
+from strogonanoff_common import *
+
 
 default_pulse_width = 500e-6
 min_default_pulse_width = 0.8 * default_pulse_width
@@ -16,9 +15,24 @@ def is_preamble(level, duration):
 def is_first_pulse(level, duration):
     return level == 1 and min_default_pulse_width <= duration and duration <= max_default_pulse_width
 
+
+def channel_and_button_for(command):
+    for row in range(0, len(channel_codes)):
+        for col in range(0, len(channel_codes[row])):
+            if channel_codes[row][col] == command:
+                return (row + 1, col + 1)
+    return (-1, -1)
+
+def on_or_off_for(code):
+    if code == on_code:
+        return True
+    elif code == off_code:
+        return False
+    else:
+        return None
+
 def p(s):
     print s,
-#    sys.stdout.flush()
 
 noise = 0
 looking_for_end_of_first_pulse = 1
@@ -83,7 +97,9 @@ class Accumulator:
         self.result = self.result | (bit & 0x01) << self.bit_count
         self.bit_count = self.bit_count + 1
         if self.bit_count == 48:
-            self.callback(self.get_command(), self.get_state_code())
+            channel_and_button = channel_and_button_for(self.get_command())
+            state = on_or_off_for(self.get_state_code())
+            self.callback(channel_and_button[0], channel_and_button[1], state)
             self.reset()
 
 def poll(pin, callback):
@@ -95,9 +111,6 @@ def poll(pin, callback):
             callback(level, now - start_t)
             level = 1 - level
             start_t = now
-
-
-from strogonanoff_sender import *
 
 def run_lengths(list):
     result = []
@@ -126,32 +139,41 @@ def pass_state_list_to_accumulator(list, accumulator):
         else:
             raise "bad run length"
 
+import unittest
+from strogonanoff_sender import *
 
-def callback(channel, button, state):
+
+def printCallback(channel, button, state):
     print channel, button, state
 
 class Strogonanoff_ReceiverTest(unittest.TestCase):
 
-    def xTest_poll(self):
+    def xtest_poll(self):
         from WiringPin import WiringPin
         pin = WiringPin(0, "in")
-        accumulator = Accumulator(callback)
+        accumulator = Accumulator(printCallback)
         state_machine = StateMachine(accumulator)
         poll(pin, state_machine.on_pulse)
+
+    def test_lookup_channel(self):
+        self.assertEquals((4, 2), channel_and_button_for(channel_codes[4 - 1][2 - 1]))
+        self.assertEquals((-1, -1), channel_and_button_for(99))
 
     def test_accumulator(self):
         channel = 4
         button = 2
 
-        def callback(command, state):
-            self.found_command = command
+        def callback(channel, button, state):
+            self.found_channel = channel
+            self.found_button = button
             self.found_state = state
 
         accumulator = Accumulator(callback)
         state_changes = encode_as_state_list(command_as_bit_list(channel, button, True))
         pass_state_list_to_accumulator(state_changes, accumulator)
-        self.assertEquals(channel_codes[channel - 1][button - 1], self.found_command)
-        self.assertEquals(on_code, self.found_state)
+        self.assertEquals(4, self.found_channel)
+        self.assertEquals(2, self.found_button)
+        self.assertEquals(True, self.found_state)
 
 
 if __name__ == "__main__":
