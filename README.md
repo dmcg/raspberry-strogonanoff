@@ -30,4 +30,4 @@ Running
 
 Needs to be run as root - 
 
-    sudo python raspwitch.py --channel 1 --button 3 --gpio 8 on 
+    sudo python strogonanoff-transmitter.py --channel 1 --button 3 --gpio 8 on 
