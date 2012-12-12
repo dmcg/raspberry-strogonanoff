@@ -31,3 +31,5 @@ Running
 Needs to be run as root - 
 
     sudo python strogonanoff_sender.py --channel 1 --button 3 --gpio 8 on 
+    
+where the GPIO pin numbers are the big ones on this diagram ![](http://pi4j.com/images/p1header-large.png)
