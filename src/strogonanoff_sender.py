@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from time import time
 from strogonanoff_common import *
 preamble = [0] * 26
