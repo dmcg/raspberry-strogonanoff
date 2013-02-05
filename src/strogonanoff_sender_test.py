@@ -31,6 +31,8 @@ class Strogonanoff_SenderTest(unittest.TestCase):
 
         self.assertEquals(preamble + [1] + postamble, encode_packet([]))
         self.assertEquals(preamble + [1] + [0, 1, 1, 1] + postamble, encode_packet([0, 1]))
+        self.assertEquals(preamble + [1] + [0, 1, 1, 1, 0, 0, 0] + postamble, encode_packet([0, 1, 1]))
+        self.assertEquals(preamble + [1] + [0, 1, 1, 1, 0, 0, 0, 1] + postamble, encode_packet([0, 1, 1, 0]))
 
     def test_command_as_bit_list(self):
         self.assertEquals(int_to_bit_list(channel_codes[0][0], 32) + int_to_bit_list(on_code, 16),
