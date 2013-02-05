@@ -30,15 +30,78 @@ class Strogonanoff_SenderTest(unittest.TestCase):
         postamble = [0, 0]
 
         self.assertEquals(preamble + [1] + postamble, encode_packet([]))
-        self.assertEquals(preamble + [1] + [0, 1, 1, 1] + postamble, encode_packet([0, 1]))
-        self.assertEquals(preamble + [1] + [0, 1, 1, 1, 0, 0, 0] + postamble, encode_packet([0, 1, 1]))
-        self.assertEquals(preamble + [1] + [0, 1, 1, 1, 0, 0, 0, 1] + postamble, encode_packet([0, 1, 1, 0]))
+        self.assertEquals(preamble + [1] + [0,1, 1, 1] + postamble, encode_packet([0, 1]))
+        self.assertEquals(preamble + [1] + [0,1, 1, 1, 0, 0, 0] + postamble, encode_packet([0, 1, 1]))
+        self.assertEquals(preamble + [1] + [0,1, 1, 1, 0, 0, 0, 1] + postamble, encode_packet([0, 1, 1, 0]))
 
     def test_command_as_bit_list(self):
         self.assertEquals(int_to_bit_list(channel_codes[0][0], 32) + int_to_bit_list(on_code, 16),
             command_as_bit_list(1, 1, True))
         self.assertEquals(int_to_bit_list(channel_codes[1][2], 32) + int_to_bit_list(off_code, 16),
             command_as_bit_list(2, 3, False))
+
+    def test_put_it_all_together(self):
+        preamble = [0] * 26
+        postamble = [0, 0]
+        self.maxDiff = None
+        self.assertEquals(
+            preamble +
+            [1] +
+            [
+                # 4, 2 is 0x3353 5333, lsb first
+                0,0,0,  #1
+                1,1,1,  #1
+                0,      #0
+                1,      #0  3
+                0,0,0,  #1
+                1,1,1,  #1
+                0,      #0
+                1,      #0  3
+                0,0,0,  #1
+                1,1,1,  #1
+                0,      #0
+                1,      #0  3
+                0,0,0,  #1
+                1,      #0
+                0,0,0,  #1
+                1,      #0  5
+                0,0,0,  #1
+                1,1,1,  #1
+                0,      #0
+                1,      #0  3
+                0,0,0,  #1
+                1,      #0
+                0,0,0,  #1
+                1,      #0  5
+                0,0,0,  #1
+                1,1,1,  #1
+                0,      #0
+                1,      #0  3
+                0,0,0,  #1
+                1,1,1,  #1
+                0,      #0
+                1,      #0  3
+
+                # On is 0x3333, lsb first
+                0,0,0,  #1
+                1,1,1,  #1
+                0,      #0
+                1,      #0  3
+                0,0,0,  #1
+                1,1,1,  #1
+                0,      #0
+                1,      #0  3
+                0,0,0,  #1
+                1,1,1,  #1
+                0,      #0
+                1,      #0  3
+                0,0,0,  #1
+                1,1,1,  #1
+                0,      #0
+                1       #0  3
+            ] +
+            postamble,
+            encode_packet(command_as_bit_list(4, 2, True)))
 
     def test_busy_wait_until(self):
         end_time = time() + default_pulse_width
