@@ -33,21 +33,6 @@ def pass_state_list_to_accumulator(list, accumulator):
 
 class Strogonanoff_ReceiverTest(unittest.TestCase):
 
-    def xtest_poll(self):
-        from WiringPin import WiringPin
-        pin = WiringPin(0, "in")
-
-        def print_callback(channel, button, state):
-            print channel, button, state, state_machine.sync_pulse_width
-
-        def error_callback():
-            print "error"
-
-        accumulator = Accumulator(print_callback, None)
-
-        state_machine = StateMachine(accumulator)
-        poll(pin, state_machine.on_pulse)
-
     def test_lookup_channel(self):
         self.assertEquals((4, 2), channel_and_button_for(channel_codes[4 - 1][2 - 1]))
         self.assertEquals((-1, -1), channel_and_button_for(99))
