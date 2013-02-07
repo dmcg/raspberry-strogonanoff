@@ -16,7 +16,6 @@ def is_preamble(level, duration):
 def is_first_pulse(level, duration):
     return level == 1 and min_default_pulse_width <= duration and duration <= max_default_pulse_width
 
-
 def channel_and_button_for(command):
     for row in range(0, len(channel_codes)):
         for col in range(0, len(channel_codes[row])):
@@ -32,9 +31,9 @@ def on_or_off_for(code):
     else:
         return None
 
-noise = 0
-looking_for_end_of_first_pulse = 1
-capturing = 2
+NOISE = 0
+LOOKING_FOR_END_OF_FIRST_PULSE = 1
+CAPTURING = 2
 
 class StateMachine:
 
@@ -43,15 +42,15 @@ class StateMachine:
         self.reset()
 
     def on_pulse(self, level, duration):
-        if self.state == noise and is_preamble(level, duration):
-            self.state = looking_for_end_of_first_pulse
-        elif self.state == looking_for_end_of_first_pulse:
+        if self.state == NOISE and is_preamble(level, duration):
+            self.state = LOOKING_FOR_END_OF_FIRST_PULSE
+        elif self.state == LOOKING_FOR_END_OF_FIRST_PULSE:
             if not is_first_pulse(level, duration):
-                self.state = noise
+                self.state = NOISE
             else:
                 self.sync_pulse_width = duration
-                self.state = capturing
-        elif self.state == capturing:
+                self.state = CAPTURING
+        elif self.state == CAPTURING:
             if self.is_long_pulse(duration):
                 self.accumulator.on_long(level)
             elif self.is_short_pulse(duration):
@@ -64,7 +63,7 @@ class StateMachine:
 
     def reset(self):
         self.accumulator.on_error()
-        self.state = noise
+        self.state = NOISE
 
     def is_short_pulse(self, duration):
         return 0.9 * self.sync_pulse_width <= duration and duration <= 1.1 * self.sync_pulse_width
