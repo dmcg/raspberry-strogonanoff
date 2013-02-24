@@ -40,6 +40,8 @@ Assuming that is the one you buy, the transmitter has 4 pins. Wire
 </table>
 where the Raspberry Pi Header Pin numbers are the little ones on the inside of the diagram below.
 
+If you've had to read this section, please see the disclaimer below.
+
 Running
 -------
 
@@ -48,3 +50,8 @@ Needs to be run as root -
     sudo ./strogonanoff_sender.py --channel 1 --button 3 --gpio 0 on 
     
 where the GPIO pin number is 0 (the default) if wired as per the table above, or otherwise the big ones on this diagram ![](http://pi4j.com/images/p1header-large.png)
+
+Disclaimer
+----------
+
+It works for me, but connecting stuff to your Raspberry Pi can blow it up. If it does, no matter how negligent I've been, I'm sorry, but it's your problem.
