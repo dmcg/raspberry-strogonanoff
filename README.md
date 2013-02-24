@@ -54,4 +54,4 @@ where the GPIO pin number is 0 (the default) if wired as per the table above, or
 Disclaimer
 ----------
 
-It works for me, but connecting stuff to your Raspberry Pi can blow it up. If it does, no matter how negligent I've been, I'm sorry, but it's your problem.
+It works for me, but connecting stuff to your Raspberry Pi can destroy either end. If it does, no matter how negligent I've been, I'm sorry, but it's your problem.
