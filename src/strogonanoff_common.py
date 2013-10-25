@@ -9,4 +9,4 @@ channel_codes = [
 on_code = 0x3333
 off_code = 0x5333
 
-default_pulse_width = 500 * 1e-6
+default_pulse_width = 450 * 1e-6 # Measured from Maplin transmitters
