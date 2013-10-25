@@ -13,7 +13,7 @@ def int_to_bit_list(i, bit_count):
     shifted = i
     for i in range(0, bit_count):
         result.append(shifted & 0x01)
-        shifted = shifted >> 1
+        shifted >>= 1
     return result
 
 # encodes 0 as a 1 count state change, 1 as a 3 count state change, starting
@@ -35,26 +35,17 @@ def command_as_bit_list(channel, button, on):
         int_to_bit_list(on_code if on else off_code, 16)
 
 def busy_wait_until(end_time):
-    while (time() <= end_time): pass
+    while time() <= end_time: pass
 
-def send(pin_number, state_list, pulse_width):
+def send(pin, state_list, pulse_width):
      end_time = time()
      for state in state_list:
          end_time = end_time + pulse_width
          pin.set_value(state)
          busy_wait_until(end_time)
 
-# still not fast enough
-def quick2wire_send(pin_number, state_list, pulse_width):
-    with exported(Pin(pin_number, Pin.Out)) as pin:
-        end_time = time()
-        for state in state_list:
-            end_time = end_time + pulse_width
-            pin.value = state
-            busy_wait_until(end_time)
 
-
-def send_command(pin, channel, button, on, pulse_width = default_pulse_width):
+def send_command(pin, channel, button, on, pulse_width=default_pulse_width):
     send(pin, encode_packet(command_as_bit_list(channel, button, on)), pulse_width)
 
 if __name__ == "__main__":
